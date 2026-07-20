@@ -16,13 +16,15 @@ For a pair `Y` and `X`, the strategy models `Y = alpha + beta * X + error` and t
 - `config.py` — All parameters: tickers, date range, train ratio, beta mode, hyperparameter grids, costs.
 - `data.py` — Downloads adjusted close prices via `yfinance`.
 - `strategy.py` — Beta estimation, z-score signals, backtest, and cross-validated parameter selection.
+- `cointegration.py` — Engle-Granger cointegration test, rolling-window cointegration, and a p-value interpretation helper.
 - `metrics.py` — Performance metrics: Sharpe, CAGR, max drawdown, total return, trade count.
 - `main.py` — Entry point: download data → train/test split → CV → backtest on test set → cost robustness check.
 
 ## Configuration
 
 Edit `config.py` to set the pair (`TICKER_Y`, `TICKER_X`) and parameters (`BETA_MODE`, `TRAIN_RATIO`, `COST_BPS`).  
-Hyperparameters (`BETA_LOOKBACK_GRID`, `Z_LOOKBACK_GRID`, `ENTRY_Z_GRID`, `EXIT_Z_GRID`) are searched over via cross-validation.
+Hyperparameters (`BETA_LOOKBACK_GRID`, `Z_LOOKBACK_GRID`, `ENTRY_Z_GRID`, `EXIT_Z_GRID`) are searched over via cross-validation.  
+The cointegration check is controlled by `COINT_ROLLING_WINDOW` (window length in days; set to `None` to skip the rolling part) and `COINT_ROLLING_STEP` (how many days to slide between windows).
 
 ## Usage
 
@@ -36,3 +38,4 @@ python main.py --beta-mode rolling
 
 - Cross-validation uses expanding-window `TimeSeriesSplit` to avoid look-ahead bias, and rolling statistics are warmed up with a training-set prefix on each fold and on the test set.
 - Choose pairs with an economic or statistical basis (e.g. cointegration); arbitrary pairs may violate the mean-reversion assumption and produce meaningless results.
+- Built-in cointegration test: The whole-interval Engle-Granger p-value shows whether the pair is cointegrated overall, while the rolling 5% fraction shows how often the relationship holds over time.

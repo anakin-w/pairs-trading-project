@@ -2,7 +2,7 @@ TICKER_Y = "GLD"
 TICKER_X = "GDX"
 
 START_DATE = "2010-01-01"
-END_DATE = None
+END_DATE = "2020-01-01"
 TRAIN_RATIO = 0.7
 
 # "fixed": estimate one beta on the whole training set.
@@ -21,3 +21,8 @@ COST_BPS = 5.0
 N_SPLITS = 5
 
 TRADING_DAYS = 252
+
+# Cointegration check (run on the training set only, in main.py).
+# Rolling window shows whether the relationship holds over time or drifts.
+COINT_ROLLING_WINDOW = 252   # 1 year per window. Set it to "None" to skip the rolling part
+COINT_ROLLING_STEP = 5       # slide weekly to keep it fast
